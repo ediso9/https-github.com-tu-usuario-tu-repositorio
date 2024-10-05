@@ -1,0 +1,39 @@
+<h2>Listado de Transacciones</h2>
+
+<form method="get" asp-action="Index">
+    <div class="form-group">
+        <label>Buscar por Remitente</label>
+        <input type="text" name="searchBySender" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Buscar</button>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Remitente</th>
+            <th>Destinatario</th>
+            <th>País de Origen</th>
+            <th>País de Destino</th>
+            <th>Monto</th>
+            <th>Moneda</th>
+            <th>Estado</th>
+            <th>Fecha</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.SenderName</td>
+                <td>@item.ReceiverName</td>
+                <td>@item.OriginCountry</td>
+                <td>@item.DestinationCountry</td>
+                <td>@item.AmountSent</td>
+                <td>@item.Currency</td>
+                <td>@item.Status</td>
+                <td>@item.TransactionDate.ToString("dd/MM/yyyy")</td>
+            </tr>
+        }
+    </tbody>
+</table>
