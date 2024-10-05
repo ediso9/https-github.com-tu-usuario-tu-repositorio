@@ -1,0 +1,54 @@
+Install-Package Npgsql.EntityFrameworkCore.PostgreSQL
+Install-Package Microsoft.EntityFrameworkCore
+Install-Package Microsoft.EntityFrameworkCore.Tools
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=your-postgresql-host;Database=your-db-name;Username=your-username;Password=your-password"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  }
+}
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddControllersWithViews();
+
+    // Configurar PostgreSQL
+    services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+}
+public class Transaction
+{
+    public int TransactionId { get; set; }
+    public string SenderName { get; set; }
+    public string ReceiverName { get; set; }
+    public string OriginCountry { get; set; }
+    public string DestinationCountry { get; set; }
+    public decimal Amount { get; set; }
+    public string Currency { get; set; }  // "USD" or "BTC"
+    public DateTime TransactionDate { get; set; }
+    public string Status { get; set; }   // Pending, Completed, etc.
+}
+public class ConversionHistory
+{
+    public int ConversionHistoryId { get; set; }
+    public decimal UsdAmount { get; set; }
+    public decimal BtcAmount { get; set; }
+    public DateTime ConversionDate { get; set; }
+    public decimal ConversionRate { get; set; }   // USD/BTC rate at time of conversion
+}
+public class ApplicationDbContext : DbContext
+{
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+    {
+    }
+
+    public DbSet<Transaction> Transactions { get; set; }
+    public DbSet<ConversionHistory> ConversionHistories { get; set; }
+}
+Add-Migration InitialCreate
+Update-Database
+Add Controller -> MVC Controller with views, using Entity Framework
