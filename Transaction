@@ -1,0 +1,30 @@
+public class Transaction
+{
+    public int TransactionId { get; set; }
+    public string SenderName { get; set; }
+    public string ReceiverName { get; set; }
+    public string OriginCountry { get; set; }
+    public string DestinationCountry { get; set; }
+    public decimal AmountSent { get; set; }
+    public decimal ExchangeRate { get; set; }
+    public decimal AmountInDestinationCurrency { get; set; }
+    public string Currency { get; set; }  // "USD" or "BTC"
+    public DateTime TransactionDate { get; set; }
+    public string Status { get; set; }   // Pending, Completed, etc.
+}
+public class TransactionsController : Controller
+{
+    private readonly ApplicationDbContext _context;
+
+    public TransactionsController(ApplicationDbContext context)
+    {
+        _context = context;
+    }
+
+    // GET: Transactions/Create
+    public IActionResult Create()
+    {
+        return View();
+    }
+
+  
