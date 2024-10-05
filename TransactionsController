@@ -1,0 +1,81 @@
+public class TransactionsController : Controller
+{
+    private readonly ApplicationDbContext _context;
+
+    public TransactionsController(ApplicationDbContext context)
+    {
+        _context = context;
+    }
+
+    // GET: Transactions/Create
+    public IActionResult Create()
+    {
+        return View();
+    }
+
+    // POST: Transactions/Create
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create([Bind("SenderName,ReceiverName,OriginCountry,DestinationCountry,AmountSent,ExchangeRate,Currency")] Transaction transaction)
+    {
+        if (ModelState.IsValid)
+        {
+            transaction.TransactionDate = DateTime.Now;
+            transaction.Status = "Pending";
+
+            // Calcular el monto final en la moneda de destino
+            transaction.AmountInDestinationCurrency = transaction.AmountSent * transaction.ExchangeRate;
+
+            _context.Add(transaction);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+        return View(transaction);
+    }
+}
+@model YourNamespace.Models.Transaction
+
+<h2>Registrar Remesa</h2>
+
+<form asp-action="Create">
+    <div class="form-group">
+        <label asp-for="SenderName"></label>
+        <input asp-for="SenderName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="ReceiverName"></label>
+        <input asp-for="ReceiverName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="OriginCountry"></label>
+        <input asp-for="OriginCountry" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="DestinationCountry"></label>
+        <input asp-for="DestinationCountry" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="AmountSent"></label>
+        <input asp-for="AmountSent" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="ExchangeRate"></label>
+        <input asp-for="ExchangeRate" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Currency"></label>
+        <select asp-for="Currency" class="form-control">
+            <option value="USD">USD</option>
+            <option value="BTC">BTC</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Registrar</button>
+</form>
+public class TransactionsController : Controller
+{
+    private readonly ApplicationDbContext _context;
+
+    public TransactionsController(ApplicationDbContext context)
+    {
+        _context = context;
+    }
