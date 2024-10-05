@@ -1,0 +1,16 @@
+// GET: Transactions
+    public async Task<IActionResult> Index(string searchBySender = null)
+    {
+        var transactions = _context.Transactions.AsQueryable();
+
+        // Filtrar por nombre del remitente (opcional)
+        if (!string.IsNullOrEmpty(searchBySender))
+        {
+            transactions = transactions.Where(t => t.SenderName.Contains(searchBySender));
+        }
+
+        return View(await transactions.ToListAsync());
+    }
+}
+@model IEnumerable<YourNamespace.Models.Transaction>
+
